@@ -2,19 +2,36 @@
 
 var Firebase = require('firebase');
 var uuid = require('node-uuid');
-var ref = new Firebase('https://firstbuild-sandbox.firebaseio.com/'); //<---change to url you want
+var firebaseAddress = 'https://firstbuild-sandbox.firebaseio.com/'  //<---change to url you want
+var ref;
 var fs = require('fs');
 var generatePassword = require('password-generator');
 var Moniker = require('moniker');
+var userName = generateUserName();
+console.log(process.argv)
+if (process.argv.length > 2){
+    firebaseAddress = process.argv[2];
+}
+if (process.argv.length == 4){
+    userName = process.argv[3];
+}
+ref = new Firebase(firebaseAddress);
+createuser(userName);
 
-createuser();
-
-function createuser() {
-
-    var firebasePassword = generatePassword(8, true);
+function generateUserName(){
     var names = Moniker.generator([Moniker.adjective, Moniker.noun]);
     var shortName = names.choose();
     var user = shortName + "@firebase.com";
+    return user;
+}
+
+function createuser(user) {
+
+    var firebasePassword = generatePassword(8, true);
+    // var names = Moniker.generator([Moniker.adjective, Moniker.noun]);
+    // var shortName = names.choose();
+    // var user = shortName + "@firebase.com";
+    shortName = user.split('@')[0]
 
     console.log("attempt to create user: ", user);
     ref.createUser({
@@ -40,12 +57,19 @@ function createuser() {
             }, function(error, authData) {
                 if (error) {
                     console.log("Firebase login failed", error);
-                    process.exit();
+                    process.exit(1);
                 } else {
-                    fs.writeFile("firebaseconfig.json" + "." + shortName, '{"firebaseUrl":"https://firstbuild-sandbox.firebaseio.com/","token":"' + authData.token + '", "firebaseUsername":"' + user+ '","firebasePassword":"' + firebasePassword + '"}\r\n', function(err) {
+                    var config = {
+                            "firebaseUrl":     firebaseAddress,
+                            "token":           authData.token, 
+                            "firebaseUsername":user,
+                            "firebasePassword":firebasePassword,
+                            "uuid":            uuid.v4()
+                        }
+                    fs.writeFile("firebaseconfig.json" + "." + shortName, JSON.stringify(config), function(err) {
                         if (err) {
-                            console.log("Unable to create chillhub.json");
-                            process.exit();
+                            console.log("Unable to create firebaseconfig.json");
+                            process.exit(1);
                         } else {
                             console.log("created firebaseconfig.json" + "." + shortName);
                             process.exit();
