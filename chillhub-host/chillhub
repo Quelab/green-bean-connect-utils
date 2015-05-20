@@ -17,18 +17,18 @@ init)
 update)
   shift
 
-  dock pull firstbuild/chillhub-commissioning
-  dock pull firstbuild/chillhub-firmware
+  dock pull quelab/chillhub-commissioning
+  dock pull quelab/chillhub-firmware
 ;;
 
 run)
   shift
-  dock run firstbuild/chillhub-commissioning --privileged -v /root:/src/share -v /sys/class/gpio:/sys/class/gpio -p 80:80
+  dock run quelab/chillhub-commissioning --privileged -v /root:/src/share -v /sys/class/gpio:/sys/class/gpio -p 80:80
 
   if [[ "$(pifi wlan0 -s)" == "WiFi_Connected" ]]; then
-    dock run firstbuild/chillhub-firmware --privileged -v /root:/src/share -v /dev:/dev 
+    dock run quelab/chillhub-firmware --privileged -v /root:/src/share -v /dev:/dev
   else
-    dock stop firstbuild/chillhub-firmware
+    dock stop quelab/chillhub-firmware
   fi
 ;;
 

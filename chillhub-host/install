@@ -12,7 +12,7 @@ MACHINE="$(uname -m)"
 RELEASE="$(uname -r)"
 IS_ARCH="$(uname -r | grep -i ARCH)"
 HAS_GIT="$(type git)"
-HAS_WIRELESS_TOOLS="$(type iwlist)"
+HAS_WIRELESS_TOOLS="$(type iw)"
 HAS_WPA_SUPPLICANT="$(type wpa_supplicant)"
 HAS_DHCP="$(type dhcpd)"
 HAS_CRON="$(type crontab)"
@@ -53,7 +53,7 @@ if [ "$option" == "1" ]; then
 
     if [[ "$HAS_WIRELESS_TOOLS" == "" ]]; then
       update_packages
-      pacman -S --noconfirm wireless_tools
+      pacman -S --noconfirm iw
     fi
 
     if [[ "$HAS_WPA_SUPPLICANT" == "" ]]; then
