@@ -70,7 +70,7 @@ if [ "$option" == "1" ]; then
       update_packages
       pacman -S --noconfirm wiringpi
     fi
-    
+
     if [[ "$HAS_MDNS" == "" ]]; then
       update_packages
       pacman -S --noconfirm avahi nss-mdns
@@ -78,7 +78,7 @@ if [ "$option" == "1" ]; then
 
     if [[ "$HAS_PIFI" == "" ]]; then
       update_packages
-      git clone https://github.com/bakerface/pifi
+      git clone https://github.com/quelab/pifi
       cd pifi
       sh install
     fi
@@ -97,8 +97,8 @@ elif [ "$option" == "2" ]; then
     systemctl enable chillhub-init.service
     systemctl enable chillhub-run.service
     systemctl enable chillhub-update.service
-    dock pull firstbuild/chillhub-commissioning
-    dock pull firstbuild/chillhub-firmware
+    dock pull quelab/chillhub-commissioning
+    dock pull quelab/chillhub-firmware
 
 elif [ "$option" == "3" ]; then
 
@@ -131,7 +131,7 @@ elif [ "$option" == "3" ]; then
 
 
     echo "downloading and installing chillhub-firmware..."
-    cd /root; git clone https://github.com/firstbuild/chillhub-firmware
+    cd /root; git clone https://github.com/quelab/chillhub-firmware
     npm config set python python2
     cd /root/chillhub-firmware; npm install
     cd /root/chillhub-host
