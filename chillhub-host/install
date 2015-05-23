@@ -14,6 +14,7 @@ IS_ARCH="$(uname -r | grep -i ARCH)"
 HAS_GIT="$(type git)"
 HAS_WIRELESS_TOOLS="$(type iw)"
 HAS_WPA_SUPPLICANT="$(type wpa_supplicant)"
+HAS_HOSTAP="$(type hostap)"
 HAS_DHCP="$(type dhcpd)"
 HAS_CRON="$(type crontab)"
 HAS_DOCKER="$(type docker)"
@@ -59,6 +60,11 @@ if [ "$option" == "1" ]; then
     if [[ "$HAS_WPA_SUPPLICANT" == "" ]]; then
       update_packages
       pacman -S --noconfirm wpa_supplicant
+    fi
+
+    if [[ "$HAS_HOSTAP" == "" ]]; then
+      update_packages
+      pacman -S --noconfirm hostapd
     fi
 
     if [[ "$HAS_DHCP" == "" ]]; then
