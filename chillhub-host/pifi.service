@@ -4,7 +4,7 @@ Documentation=
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/pifi wlan0 -d /root
+ExecStart=/usr/bin/pifi wlan0 -v -d /root
 Restart=always
 RestartSec=5
 
