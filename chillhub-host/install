@@ -112,9 +112,9 @@ elif [ "$option" == "2" ]; then
     dock pull quelab/chillhub-commissioning
     dock pull quelab/chillhub-firmware
     dock pull quelab/chillhub-configure
-    dock run_once quelab/chillhub-config node generate
+    dock run_once quelab/chillhub-config node generateFirebaseLoginAndToken.js $firebaseUrl
     echo "Configuring wlan0 to come up in ap mode as 'chillhub-host' pw: 'chillhub'"
-    pifi wlan0 -a chillhub-host chillhub
+    cd /root && pifi wlan0 -a chillhub-host chillhub
 elif [ "$option" == "3" ]; then
 
     cd /root
