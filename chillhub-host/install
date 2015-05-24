@@ -97,6 +97,12 @@ elif [ "$option" == "2" ]; then
       reboot
       exit 0
     fi
+    firebaseUrl='https://firstbuild-sandbox.firebaseio.com/'
+    echo "What firebase url would you like to use? default:$firebaseUrl"
+    read -t 120 temp
+    if [[ "$temp" != "" ]]; then
+      firebaseUrl=$temp
+    fi
     cp ./chillhub-*service /usr/lib/systemd/system
     cp ./chillhub /usr/bin/chillhub
     cp ./dock /usr/bin/dock
@@ -105,7 +111,10 @@ elif [ "$option" == "2" ]; then
     systemctl enable chillhub-update.service
     dock pull quelab/chillhub-commissioning
     dock pull quelab/chillhub-firmware
-
+    dock pull quelab/chillhub-configure
+    dock run_once quelab/chillhub-config node generate
+    echo "Configuring wlan0 to come up in ap mode as 'chillhub-host' pw: 'chillhub'"
+    pifi wlan0 -a chillhub-host chillhub
 elif [ "$option" == "3" ]; then
 
     cd /root
