@@ -118,7 +118,7 @@ elif [ "$option" == "2" ]; then
     systemctl enable chillhub-update.service
     dock pull quelab/chillhub-commissioning
     dock pull quelab/chillhub-firmware
-    dock pull quelab/chillhub-configure
+    dock pull quelab/chillhub-config
     quelab_config_image=$(get_current_docker_image "quelab/chillhub-config")
     docker run  -v /root:/src/share $quelab_config_image node generateFirebaseLoginAndToken.js $firebaseUrl
     echo "Configuring wlan0 to come up in ap mode as 'chillhub-host' pw: 'chillhub'"
