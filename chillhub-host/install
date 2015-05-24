@@ -33,6 +33,13 @@ update_packages() {
   fi
 }
 
+get_current_docker_image() {
+  repo="$1"
+  current_tag_name=$(docker images | grep $repo | awk '{print $2}')
+  echo "${repo}:${current_tag_name}"
+}
+
+
 echo "What would you like to do? 1=Base Install, 2=Docker Container Development, 3=Local ChillHub Development"
 read option
 pacman -Syu
@@ -112,7 +119,8 @@ elif [ "$option" == "2" ]; then
     dock pull quelab/chillhub-commissioning
     dock pull quelab/chillhub-firmware
     dock pull quelab/chillhub-configure
-    dock run_once quelab/chillhub-config node generateFirebaseLoginAndToken.js $firebaseUrl
+    quelab_config_image=get_current_docker_image('quelab/chillhub-config')
+    docker run  -v /root:/src/share $quelab_config_image node generateFirebaseLoginAndToken.js $firebaseUrl
     echo "Configuring wlan0 to come up in ap mode as 'chillhub-host' pw: 'chillhub'"
     cd /root && pifi wlan0 -a chillhub-host chillhub
 elif [ "$option" == "3" ]; then

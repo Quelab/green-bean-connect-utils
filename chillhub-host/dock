@@ -77,25 +77,6 @@ dock_run() {
   fi
 }
 
-dock_run_once() {
-  repo="$1"
-  shift
-
-  current_tag_name=$(docker images | grep $repo | awk '{print $2}')
-  current_image=$(docker images | grep $repo | awk '{print $3}')
-  current_container=$(docker ps | grep $repo | awk '{print $1}')
-
-  if [[ -z "$current_image" ]]; then
-    dock_pull $repo
-  elif [[ -z "$current_container" ]]; then
-    docker rm $(docker ps -a | grep $repo | awk '{print $1}') &>/dev/null
-
-    docker run $@ "${repo}:${current_tag_name}" || {
-      ercho "Failed to start docker container for $repo"
-      exit 1
-    }
-  fi
-}
 
 dock_stop() {
   current_container=$(docker ps | grep $1 | awk '{print $1}')
@@ -135,17 +116,6 @@ run)
     dock_run $@
   else
     ercho "Usage: dock run <owner/repo> [options]"
-    exit 1
-  fi
-;;
-
-run_once)
-  shift
-
-  if [[ $# -ge 1 ]]; then
-    dock_run_once $@
-  else
-    ercho "Usage: dock run_once <owner/repo> [options]"
     exit 1
   fi
 ;;
